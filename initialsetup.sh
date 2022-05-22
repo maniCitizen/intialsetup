@@ -81,9 +81,9 @@ LINK="https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 # Check if wget or curl exists
 if  ! command -v wget &>/dev/null
 then
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --skip-chsh"
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"
 else
-    sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --skip-chsh"
+    sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --unattended"
 fi
 
 if [[ "${?}" -ne 0 ]]
@@ -91,3 +91,31 @@ then
     echo "Error in installing oh-my-zsh"
     exit 1
 fi
+
+# Setup oh-my-zsh
+
+git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git
+git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git
+git -C ~/.oh-my-zsh/custom/themes clone --depth=1 https://github.com/romkatv/powerlevel10k.git
+
+cp .p10k.zsh ~/
+
+cat >~/.zshrc <<\END
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+ZSH=~/.oh-my-zsh
+DISABLE_AUTO_UPDATE=true
+DISABLE_MAGIC_FUNCTIONS=true
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+ZSH_THEME="powerlevel10k/powerlevel10k"
+plugins=(zsh-syntax-highlighting zsh-autosuggestions)
+
+source ~/.oh-my-zsh/oh-my-zsh.sh
+source ~/.p10k.zsh
+END
+
+echo "Please exit of out of the shell and reload the session to see the effects"
+exit 0
