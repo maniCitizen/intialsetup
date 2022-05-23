@@ -7,3 +7,5 @@
 - Installs the powerlevel10k theme
 
 - Changes the theme to powerlevel10k
+
+- Downloads and installs following plugins : zsh-syntax-highlighting & zsh-autosuggestions
