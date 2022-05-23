@@ -2,14 +2,17 @@
 
 #Check if script is executed with root permissions
 
-# if [[ "${UID}" -ne 0 ]]
-# then
-#     echo "Please execute this script with sudo / root permissions"
-#     exit 1
-# fi
+if [[ "${UID}" -eq 0 ]]
+then
+    echo "Please do not execute this script with sudo / root permissions"
+    exit 1
+fi
+
+#Create a file for logs
+LOGFILE="logfile.txt"
 
 # Create a file for logs
-touch logfile.txt
+touch ${LOGFILE}
 
 # Distro information
 
@@ -21,14 +24,14 @@ DISTRO=$(. /etc/os-release && echo "$ID")
 debian_install()
 {
     echo "Updates going on !!!"
-    sudo apt-get update &>>logfile.txt
+    sudo apt-get update &>>${LOGFILE}
     echo "Installing zsh"
-    sudo apt install zsh -y &>>logfile.txt
+    sudo apt install zsh -y &>>${LOGFILE}
 
     if [[ "${?}" -ne 0 ]]
     then
         echo "Script could not proceed hereafter !!!"
-        echo "Please check logfile.txt in current directory for logs"
+        echo "Please check ${LOGFILE} in current directory for logs"
         exit 1
     fi
 }
@@ -36,14 +39,14 @@ debian_install()
 centos_install()
 {
     echo "Updates going on !!!"
-    sudo yum -y update &>>logfile.txt
+    sudo yum -y update &>>${LOGFILE}
     echo "Installing zsh"
-    sudo yum install -y zsh &>>logfile.txt
+    sudo yum install -y zsh &>>${LOGFILE}
 
     if [[ "${?}" -ne 0 ]]
     then
         echo "Script could not proceed hereafter !!!"
-        echo "Please check logfile.txt in current directory for logs"
+        echo "Please check ${LOGFILE} in current directory for logs"
         exit 1
     fi
 }
@@ -81,9 +84,11 @@ LINK="https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 # Check if wget or curl exists
 if  ! command -v wget &>/dev/null
 then
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended"
+    echo "Installing oh-my-zsh"
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended" &>>${LOGFILE}
 else
-    sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --unattended"
+    echo "Installing oh-my-zsh"
+    sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --unattended" &>>${LOGFILE}
 fi
 
 if [[ "${?}" -ne 0 ]]
@@ -94,28 +99,23 @@ fi
 
 # Setup oh-my-zsh
 
-git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git
-git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git
-git -C ~/.oh-my-zsh/custom/themes clone --depth=1 https://github.com/romkatv/powerlevel10k.git
+# Clone zsh-syntax-highlighting
+echo "Cloning zsh-syntax-highlighting"
+git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git &>>${LOGFILE}
 
+# Clone zsh-autosugestions
+echo "Cloning zsh-autosuggestions"
+git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git &>>${LOGFILE}
+
+# Clone powerlevel10k theme
+echo "Cloning powerlevel10k"
+git -C ~/.oh-my-zsh/custom/themes clone --depth=1 https://github.com/romkatv/powerlevel10k.git &>>${LOGFILE}
+
+# Copy the .p10.zsh file for customization
 cp .p10k.zsh ~/
 
-cat >~/.zshrc <<\END
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-ZSH=~/.oh-my-zsh
-DISABLE_AUTO_UPDATE=true
-DISABLE_MAGIC_FUNCTIONS=true
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-ZSH_THEME="powerlevel10k/powerlevel10k"
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
-
-source ~/.oh-my-zsh/oh-my-zsh.sh
-source ~/.p10k.zsh
-END
+# Copy the .zshrc configuration file
+cp .zshrc ~/
 
 echo "Please exit of out of the shell and reload the session to see the effects"
 exit 0
