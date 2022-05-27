@@ -8,6 +8,17 @@ then
     exit 1
 fi
 
+# Function for exit status condition
+
+exit_status()
+{
+    if [[ "${?}" -ne 0 ]]
+    then
+        echo $1
+        exit 1
+    fi
+}
+
 #Create a file for logs
 LOGFILE="logfile.txt"
 
@@ -28,12 +39,7 @@ debian_install()
     echo "Installing zsh"
     sudo apt install zsh -y &>>${LOGFILE}
 
-    if [[ "${?}" -ne 0 ]]
-    then
-        echo "Script could not proceed hereafter !!!"
-        echo "Please check ${LOGFILE} in current directory for logs"
-        exit 1
-    fi
+    exit_status "Script could not proceed hereafter !!! . Please check the ${LOGFILE} in current directory for logs."
 }
 
 centos_install()
@@ -43,12 +49,7 @@ centos_install()
     echo "Installing zsh"
     sudo yum install -y zsh &>>${LOGFILE}
 
-    if [[ "${?}" -ne 0 ]]
-    then
-        echo "Script could not proceed hereafter !!!"
-        echo "Please check ${LOGFILE} in current directory for logs"
-        exit 1
-    fi
+    exit_status "Script could not proceed hereafter !!! . Please check the ${LOGFILE} in current directory for logs."
 }
 
 case $DISTRO in
@@ -64,19 +65,11 @@ esac
 
 ZSH_PRESENT=$(cat /etc/shells | grep zsh)
 
-if [[ "${?}" -ne 0 ]]
-then
-    echo "ZSH is not present !!!"
-    exit 1
-fi
+exit_status "ZSH is not present !!!"
 
 sudo chsh -s $(which zsh) $(whoami)
 
-if [[ "${?}" -ne 0 ]]
-then
-    echo "Shell not changed due to an error !!!"
-    exit 1
-fi
+exit_status "Shell not changed due to an error !!!"
 
 # Oh-my-zsh script
 LINK="https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
@@ -91,11 +84,7 @@ else
     sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --unattended" &>>${LOGFILE}
 fi
 
-if [[ "${?}" -ne 0 ]]
-then
-    echo "Error in installing oh-my-zsh"
-    exit 1
-fi
+exit_status "Error in installing oh-my-zsh"
 
 # Setup oh-my-zsh
 
@@ -111,11 +100,17 @@ git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/
 echo "Cloning powerlevel10k"
 git -C ~/.oh-my-zsh/custom/themes clone --depth=1 https://github.com/romkatv/powerlevel10k.git &>>${LOGFILE}
 
+exit_status "Powerlevel theme was not cloned succesfully !!!"
+
 # Copy the .p10.zsh file for customization
 cp .p10k.zsh ~/
 
+exit_status ".p10k.zsh was not copied usccessfully !!!"
+
 # Copy the .zshrc configuration file
 cp .zshrc ~/
+
+exit_status ".zshrc was not copied successfully !!!"
 
 echo "Please exit of out of the shell and reload the session to see the effects"
 exit 0
