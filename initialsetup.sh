@@ -4,8 +4,8 @@
 
 if [[ "${UID}" -eq 0 ]]
 then
-    echo "Please do not execute this script with sudo / root permissions"
-    exit 1
+    echo "You are running this script as a root user. Continuing with the script installs all the tools in root profile."
+    echo "Proceed with caution !!!"
 fi
 
 # Function for exit status condition
