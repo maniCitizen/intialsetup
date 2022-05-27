@@ -78,10 +78,10 @@ LINK="https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
 if  ! command -v wget &>/dev/null
 then
     echo "Installing oh-my-zsh"
-    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended" &>>${LOGFILE}
+    sh -c "$(curl -fsSL --silent https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended" &>>${LOGFILE}
 else
     echo "Installing oh-my-zsh"
-    sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --unattended" &>>${LOGFILE}
+    sh -c "$(wget --quiet https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -) --unattended" &>>${LOGFILE}
 fi
 
 exit_status "Error in installing oh-my-zsh"
