@@ -1,4 +1,4 @@
-# Script to automate inital Linux shell customizations
+# Script to automate initial Linux shell customizations
 
 - This script installs zsh and makes it as a default shell
 
