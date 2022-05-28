@@ -34,8 +34,6 @@ DISTRO=$(. /etc/os-release && echo "$ID")
 ## Install zsh in debian
 debian_install()
 {
-    echo "Updates going on !!!"
-    sudo apt-get update &>>${LOGFILE}
     echo "Installing zsh"
     sudo apt install zsh -y &>>${LOGFILE}
 
@@ -44,8 +42,6 @@ debian_install()
 
 centos_install()
 {
-    echo "Updates going on !!!"
-    sudo yum -y update &>>${LOGFILE}
     echo "Installing zsh"
     sudo yum install -y zsh &>>${LOGFILE}
 
