@@ -52,7 +52,7 @@ case $DISTRO in
     ubuntu|debian)
         debian_install
         ;;
-    centos|rhel|almalinux|rockylinux)
+    centos|rhel|almalinux|rocky)
         centos_install
         ;;
 esac
