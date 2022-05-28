@@ -67,9 +67,6 @@ sudo chsh -s $(which zsh) $(whoami)
 
 exit_status "Shell not changed due to an error !!!"
 
-# Oh-my-zsh script
-LINK="https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh"
-
 # Check if wget or curl exists
 if  ! command -v wget &>/dev/null
 then
