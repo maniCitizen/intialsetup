@@ -85,9 +85,13 @@ exit_status "Error in installing oh-my-zsh"
 echo "Cloning zsh-syntax-highlighting"
 git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git &>>${LOGFILE}
 
+exit_status "Zsh-syntax-highlighting was not cloned successfully !!!"
+
 # Clone zsh-autosugestions
 echo "Cloning zsh-autosuggestions"
 git -C ~/.oh-my-zsh/custom/plugins clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions.git &>>${LOGFILE}
+
+exit_status "Zsh-autosuggestions was not cloned successfully !!!"
 
 # Clone powerlevel10k theme
 echo "Cloning powerlevel10k"
@@ -98,7 +102,7 @@ exit_status "Powerlevel theme was not cloned succesfully !!!"
 # Copy the .p10.zsh file for customization
 cp .p10k.zsh ~/
 
-exit_status ".p10k.zsh was not copied usccessfully !!!"
+exit_status ".p10k.zsh was not copied successfully !!!"
 
 # Copy the .zshrc configuration file
 cp .zshrc ~/
