@@ -109,5 +109,15 @@ cp .zshrc ~/
 
 exit_status ".zshrc was not copied successfully !!!"
 
+# Decision on which script to proceed further with
+case $DISTRO in
+    ubuntu|debian)
+        bash ubuntu_tools_install.sh
+        ;;
+    centos|rhel|almalinux|rocky)
+        bash centos_tools_install.sh
+        ;;
+esac
+
 echo "Please exit of out of the shell and reload the session to see the effects"
 exit 0
