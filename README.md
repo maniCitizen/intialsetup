@@ -8,4 +8,6 @@
 
 - Changes the theme to powerlevel10k
 
+- Enable git plugin for zsh
+
 - Downloads and installs following plugins : zsh-syntax-highlighting & zsh-autosuggestions
